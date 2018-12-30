@@ -2,7 +2,7 @@
 
 Error cmdParse(CmdItem* itemList, int argc, char** argv) {
     for (size_t i = 1; i < argc; i++) {
-      if (strlen(argv[i]) < 2 || argv[i][0] != '-')
+      if (strlen(argv[i]) < 2 || argv[i][0] != '-' && argv[i][0] != '+')
       return EmptyKey;
       else {
           for (size_t j = 1; argv[i][j] != '\0'; j++) {
