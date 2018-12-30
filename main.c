@@ -47,6 +47,7 @@ int main(int argc, char** argv)
         printf("Opening file: %s\n", getKeyValue(itemList, 'o'));
     }
 
+
     if(isValue(itemList, 'a')) {
         printf("Appending values to file: %s\n", getKeyValue(itemList, 'a'));
     }
