@@ -16,7 +16,7 @@ int main(int argc, char** argv)
             'o', 0x00000000, NULL, "Open file (need value)", true
         },
         {
-            'p', 0x00000000, NULL, "Print current file to console", false
+            'p', 0x00000000, NULL, "Print key-massive after parsing", false
         },
         {
             0, 0, NULL, NULL, false
@@ -25,8 +25,6 @@ int main(int argc, char** argv)
     };
 
     int err = cmdParse(itemList, argc, argv);
-    //printError(err);
-
     
     //Чтобы программа завершалась при ошибке, можно удалить  и раскомментировать строку выше
     if (err != Ok) {
@@ -36,11 +34,11 @@ int main(int argc, char** argv)
     }
 
     if(isKey(itemList, 'h')) {
-        cmdUsage(itemList,argv[0]);
+        printHelp(itemList,argv[0]);
     }
 
     if(isKey(itemList, 'p')) {
-        printf("Print file: \n");
+        cmdUsage(itemList, "Key-massive after parsing:\n");
     }
 
     if(isValue(itemList, 'o')) {

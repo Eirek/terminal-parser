@@ -9,11 +9,11 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
               CmdItem *opt = getKeyPointer(itemList, argv[i][j]);
               if (opt == NULL)
                  return UnknownKey;
-              opt->mask = KEY_IN_CMD;
+              opt->mask |= KEY_IN_CMD;
               if (opt->needValue == true && argv[i+1] == NULL)
                   return KeyNeedValue;
               if (opt->needValue == true) {
-                  opt->mask = KEY_IN_CMD << 1;
+                  opt->mask = VAL_IN_CMD;
                   opt->value = argv[i+1];
                   ++i;
                   break;
@@ -39,7 +39,7 @@ bool isKey(CmdItem* itemList, char key) {
 bool isValue(CmdItem* itemList, char key){
     int i = 0;
     while (!isEmpty(&itemList[i])) {
-      if((itemList[i].key == key) && (itemList[i].mask &= 10))
+      if((itemList[i].key == key) && (itemList[i].mask &= VAL_IN_CMD))
           return true;
           i++;
   }
@@ -68,9 +68,7 @@ char* getKeyValue(CmdItem* itemList, char key){
 }
 
 
-
-/* Вывод на экран текста text и содержимого массива */
-void cmdUsage(CmdItem* itemList, char *text){
+void printHelp(CmdItem* itemList, char *text){
     printf("Usage: %s [key] [value] Example: [-p -a file.txt]\n\n", text);
     printf("Keys:\n");
     for(size_t i = 0; isEmpty(&itemList[i]) != true; i++)
@@ -97,6 +95,21 @@ void printError(Error errorCode){
       default:
           break;
   }
+}
+
+/* Вывод на экран текста text и содержимого массива */
+void cmdUsage(CmdItem* itemList, char *text) {
+    printf("%s\n", text);
+    printf("%-11s%-19s%-20s%-20s%-20s\n", "Key", "Mask", "Need Value", "Value", "Usage");
+
+    for(size_t i = 0; isEmpty(&itemList[i]) != true; i++){
+        printf("-%c  \t%#010x  \t%11i  \t%15s  \t%s\n",
+               itemList[i].key,
+               itemList[i].mask,
+               itemList[i].needValue,
+               itemList[i].value,
+               itemList[i].usage);
+    }
 }
 
 /* Функция определения последнего элемента */
