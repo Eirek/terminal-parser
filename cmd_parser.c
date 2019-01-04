@@ -1,19 +1,21 @@
 #include "cmd_parser.h"
 
 Error cmdParse(CmdItem* itemList, int argc, char** argv) {
+    if (argc <= 1)
+    return NoKey;
     for (size_t i = 1; i < argc; i++) {
-      if (strlen(argv[i]) < 2 || argv[i][0] != '-' && argv[i][0] != '+')
-      return EmptyKey;
+      if (strlen(argv[i]) < 2 && (argv[i][0] != '-' || argv[i][0] != '+'))
+      return UnknownKey;
       else {
           for (size_t j = 1; argv[i][j] != '\0'; j++) {
               CmdItem *opt = getKeyPointer(itemList, argv[i][j]);
               if (opt == NULL)
                  return UnknownKey;
-              opt->mask = KEY_IN_CMD;
+              opt->mask |= KEY_IN_CMD;
               if (opt->needValue == true && argv[i+1] == NULL)
                   return KeyNeedValue;
               if (opt->needValue == true) {
-                  opt->mask = KEY_IN_CMD << 1;
+                  opt->mask = VAL_IN_CMD;
                   opt->value = argv[i+1];
                   ++i;
                   break;
@@ -39,7 +41,7 @@ bool isKey(CmdItem* itemList, char key) {
 bool isValue(CmdItem* itemList, char key){
     int i = 0;
     while (!isEmpty(&itemList[i])) {
-      if((itemList[i].key == key) && (itemList[i].mask &= 10))
+      if((itemList[i].key == key) && (itemList[i].mask &= VAL_IN_CMD))
           return true;
           i++;
   }
@@ -67,10 +69,8 @@ char* getKeyValue(CmdItem* itemList, char key){
     return NULL;
 }
 
-
-
-/* Вывод на экран текста text и содержимого массива */
-void cmdUsage(CmdItem* itemList, char *text){
+/* Печать справки */
+void printHelp(CmdItem* itemList, char *text){
     printf("Usage: %s [key] [value] Example: [-p -a file.txt]\n\n", text);
     printf("Keys:\n");
     for(size_t i = 0; isEmpty(&itemList[i]) != true; i++)
@@ -90,13 +90,28 @@ void printError(Error errorCode){
           printf("Error: Key need value\n");
           break;
 
-      case EmptyKey:
+      case NoKey:
           printf("Error: Please specify key. Use -h for help. \n");
           break;
 
       default:
           break;
   }
+}
+
+/* Вывод на экран текста text и содержимого массива */
+void cmdUsage(CmdItem* itemList, char *text) {
+    printf("%s\n", text);
+    printf("%-11s%-19s%-20s%-20s%-20s\n", "Key", "Mask", "Need Value", "Value", "Usage");
+
+    for(size_t i = 0; isEmpty(&itemList[i]) != true; i++){
+        printf("-%c  \t%#010x  \t%11s  \t%15s  \t%s\n",
+               itemList[i].key,
+               itemList[i].mask,
+               itemList[i].needValue ? "true" : "false",
+               itemList[i].value,
+               itemList[i].usage);
+    }
 }
 
 /* Функция определения последнего элемента */

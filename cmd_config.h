@@ -13,7 +13,7 @@ typedef enum {
     Ok = 100,
     UnknownKey = 200,
     KeyNeedValue = 300,
-    EmptyKey = 400
+    NoKey = 400
 } Error;
 
 /* Структура для хранения ключа */
