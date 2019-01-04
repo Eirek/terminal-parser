@@ -7,11 +7,12 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
       if (strlen(argv[i]) < 2 && (argv[i][0] != '-' || argv[i][0] != '+'))
       return UnknownKey;
       else {
+		  char sign = argv[i][0];
           for (size_t j = 1; argv[i][j] != '\0'; j++) {
-              CmdItem *opt = getKeyPointer(itemList, argv[i][j]);
+              CmdItem *opt = getKeyPointer(itemList, sign, argv[i][j]);
               if (opt == NULL)
                  return UnknownKey;
-              opt->mask |= KEY_IN_CMD;
+              opt->mask = KEY_IN_CMD;
               if (opt->needValue == true && argv[i+1] == NULL)
                   return KeyNeedValue;
               if (opt->needValue == true) {
@@ -27,10 +28,10 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
 }
 
 /* Функция проверки наличия ключа */
-bool isKey(CmdItem* itemList, char key) {
+bool isKey(CmdItem* itemList, char sign, char key) {
     int i = 0;
     while (!isEmpty(&itemList[i])) {
-        if((itemList[i].key == key) && (itemList[i].mask &= KEY_IN_CMD))
+        if((itemList[i].sign == sign) && (itemList[i].key == key) && (itemList[i].mask &= KEY_IN_CMD))
             return true;
             i++;
     }
@@ -38,10 +39,10 @@ bool isKey(CmdItem* itemList, char key) {
 }
 
 /* Функция проверки наличия значения */
-bool isValue(CmdItem* itemList, char key){
+bool isValue(CmdItem* itemList, char sign, char key){
     int i = 0;
     while (!isEmpty(&itemList[i])) {
-      if((itemList[i].key == key) && (itemList[i].mask &= VAL_IN_CMD))
+      if((itemList[i].sign == sign) && (itemList[i].key == key) && (itemList[i].mask &= VAL_IN_CMD))
           return true;
           i++;
   }
@@ -49,9 +50,9 @@ bool isValue(CmdItem* itemList, char key){
 }
 
 /* Получение указателя на объект, описывающий ключ  (NULL если ключа нет в массиве)*/
-CmdItem* getKeyPointer(CmdItem* itemList, char key){
+CmdItem* getKeyPointer(CmdItem* itemList, char sign, char key){
   for(size_t i = 0; isEmpty(&itemList[i]) != true; i++) {
-      if (itemList[i].key == key) {
+      if ((itemList[i].sign == sign) && (itemList[i].key == key)) {
           return itemList + i;         
       }
   }
@@ -59,10 +60,10 @@ CmdItem* getKeyPointer(CmdItem* itemList, char key){
 }
 
 /* Получение значения ключа */
-char* getKeyValue(CmdItem* itemList, char key){
+char* getKeyValue(CmdItem* itemList, char sign, char key){
     int i = 0;
     while (!isEmpty(&itemList[i])) {
-        if ((itemList[i].key == key) && (itemList[i].needValue == true)) 
+        if ((itemList[i].sign == sign) && (itemList[i].key == key) && (itemList[i].needValue == true)) 
             return itemList[i].value;
             i++;
         }
@@ -74,7 +75,7 @@ void printHelp(CmdItem* itemList, char *text){
     printf("Usage: %s [key] [value] Example: [-p -a file.txt]\n\n", text);
     printf("Keys:\n");
     for(size_t i = 0; isEmpty(&itemList[i]) != true; i++)
-      printf("-%c\t %s\n", itemList[i].key,itemList[i].usage);
+      printf("%c%c\t %s\n", itemList[i].sign, itemList[i].key, itemList[i].usage);
   
 }
 
@@ -113,10 +114,10 @@ void cmdUsage(CmdItem* itemList, char *text) {
                itemList[i].usage);
     }
 }
-
 /* Функция определения последнего элемента */
 bool isEmpty(CmdItem* itemList) {
-    if ((itemList->key == 0) &&
+    if ((itemList->sign == 0) &&
+		(itemList->key == 0) &&
         (itemList->mask == 0) &&
         (itemList->value == NULL) &&
         (itemList->usage == NULL) &&

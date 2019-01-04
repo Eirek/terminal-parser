@@ -18,6 +18,7 @@ typedef enum {
 
 /* Структура для хранения ключа */
 typedef struct {
+	char sign;
     char key;
 	int mask;
     char *value;

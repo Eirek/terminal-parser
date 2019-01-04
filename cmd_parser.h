@@ -14,16 +14,16 @@
 Error cmdParse(CmdItem* itemList, int argc, char** argv);
 
 /* Функция проверки наличия ключа */
-bool isKey(CmdItem* itemList, char key);
+bool isKey(CmdItem* itemList, char sign,char key);
 
 /* Функция проверки наличия значения */
-bool isValue(CmdItem* itemList, char key);
+bool isValue(CmdItem* itemList, char sign,char key);
 
 /* Получение указателя на объект, описывающий ключ  (NULL если ключа нет в массиве)*/
-CmdItem* getKeyPointer(CmdItem* itemList, char key);
+CmdItem* getKeyPointer(CmdItem* itemList, char sign, char key);
 
 /* Получение значения ключа */
-char* getKeyValue(CmdItem* itemList, char key);
+char* getKeyValue(CmdItem* itemList, char sign,char key);
 
 /* Вывод на экран текста text и содержимого массива */
 void cmdUsage(CmdItem* itemList, char *text);
