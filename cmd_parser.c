@@ -1,9 +1,11 @@
 #include "cmd_parser.h"
 
 Error cmdParse(CmdItem* itemList, int argc, char** argv) {
+    if (argc <= 1)
+    return NoKey;
     for (size_t i = 1; i < argc; i++) {
-      if (strlen(argv[i]) < 2 || argv[i][0] != '-' && argv[i][0] != '+')
-      return EmptyKey;
+      if (strlen(argv[i]) < 2 && (argv[i][0] != '-' || argv[i][0] != '+'))
+      return UnknownKey;
       else {
           for (size_t j = 1; argv[i][j] != '\0'; j++) {
               CmdItem *opt = getKeyPointer(itemList, argv[i][j]);
@@ -67,7 +69,7 @@ char* getKeyValue(CmdItem* itemList, char key){
     return NULL;
 }
 
-
+/* Печать справки */
 void printHelp(CmdItem* itemList, char *text){
     printf("Usage: %s [key] [value] Example: [-p -a file.txt]\n\n", text);
     printf("Keys:\n");
@@ -88,7 +90,7 @@ void printError(Error errorCode){
           printf("Error: Key need value\n");
           break;
 
-      case EmptyKey:
+      case NoKey:
           printf("Error: Please specify key. Use -h for help. \n");
           break;
 
@@ -103,10 +105,10 @@ void cmdUsage(CmdItem* itemList, char *text) {
     printf("%-11s%-19s%-20s%-20s%-20s\n", "Key", "Mask", "Need Value", "Value", "Usage");
 
     for(size_t i = 0; isEmpty(&itemList[i]) != true; i++){
-        printf("-%c  \t%#010x  \t%11i  \t%15s  \t%s\n",
+        printf("-%c  \t%#010x  \t%11s  \t%15s  \t%s\n",
                itemList[i].key,
                itemList[i].mask,
-               itemList[i].needValue,
+               itemList[i].needValue ? "true" : "false",
                itemList[i].value,
                itemList[i].usage);
     }
