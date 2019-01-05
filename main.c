@@ -10,10 +10,10 @@ int main(int argc, char** argv)
             '-', 'h', 0x00000000, NULL, "Print help-text", false
         },
         {
-            '-', 'a', 0x00000000, NULL, "Append value to file (need value)", true
+            '-', 'a', 0x00000000, NULL, "Print greetings to (value)", true
         },
         {
-            '-', 'o', 0x00000000, NULL, "Open file (need value)", true
+            '-', 'o', 0x00000000, NULL, "Open file (value)", true
         },
         {
             '+', 'p', 0x00000000, NULL, "Print key-massive after parsing", false
@@ -26,7 +26,6 @@ int main(int argc, char** argv)
 
     int err = cmdParse(itemList, argc, argv);
     
-    //Чтобы программа завершалась при ошибке, можно удалить  и раскомментировать строку выше
     if (err != Ok) {
 
         printError(err);
@@ -47,7 +46,7 @@ int main(int argc, char** argv)
 
 
     if(isValue(itemList, '-','a')) {
-        printf("Appending values to file: %s\n", getKeyValue(itemList, '-','a'));
+        printf("Hello, %s!\n", getKeyValue(itemList, '-','a'));
     }
 
     return 0;

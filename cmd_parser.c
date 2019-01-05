@@ -4,7 +4,7 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
     if (argc <= 1)
     return NoKey;
     for (size_t i = 1; i < argc; i++) {
-      if (strlen(argv[i]) < 2 && (argv[i][0] != '-' || argv[i][0] != '+'))
+      if (strlen(argv[i]) < 2)
       return UnknownKey;
       else {
 		  char sign = argv[i][0];
@@ -12,7 +12,7 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
               CmdItem *opt = getKeyPointer(itemList, sign, argv[i][j]);
               if (opt == NULL)
                  return UnknownKey;
-              opt->mask = KEY_IN_CMD;
+              opt->mask |= KEY_IN_CMD;
               if (opt->needValue == true && argv[i+1] == NULL)
                   return KeyNeedValue;
               if (opt->needValue == true) {
@@ -106,10 +106,11 @@ void cmdUsage(CmdItem* itemList, char *text) {
     printf("%-11s%-19s%-20s%-20s%-20s\n", "Key", "Mask", "Need Value", "Value", "Usage");
 
     for(size_t i = 0; isEmpty(&itemList[i]) != true; i++){
-        printf("-%c  \t%#010x  \t%11s  \t%15s  \t%s\n",
+        printf("%c%c  \t%#010x  \t%13s  \t%15s  \t%s\n",
+               itemList[i].sign,
                itemList[i].key,
                itemList[i].mask,
-               itemList[i].needValue ? "true" : "false",
+               itemList[i].needValue ? "true" : "false", //Можно обойтись и без тернарного оператора, тогда будет просто выводить 1 или 0, а не true false
                itemList[i].value,
                itemList[i].usage);
     }

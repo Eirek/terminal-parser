@@ -31,6 +31,7 @@ void cmdUsage(CmdItem* itemList, char *text);
 /* Вывод ошибки по ее коду */
 void printError(Error errorCode);
 
+/* Вывод справки на экран */
 void printHelp(CmdItem* itemList, char *text);
 
 /* Функция определения последнего элемента */
