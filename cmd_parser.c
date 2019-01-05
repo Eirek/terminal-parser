@@ -110,7 +110,7 @@ void cmdUsage(CmdItem* itemList, char *text) {
                itemList[i].sign,
                itemList[i].key,
                itemList[i].mask,
-               itemList[i].needValue ? "true" : "false", //Можно обойтись и без тернарного оператора, тогда будет просто выводить 1 или 0, а не true false
+               itemList[i].needValue ? "true" : "false", 
                itemList[i].value,
                itemList[i].usage);
     }
