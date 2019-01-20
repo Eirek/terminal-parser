@@ -3,7 +3,7 @@
 /* Функция парсинга строки, возвращает ошибку из структуры Error */
 Error cmdParse(CmdItem* itemList, int argc, char** argv) {
     if (argc <= 1) 
-    return NoKey;
+    return 0;
     for (size_t i = 1; i < argc; i++) {
       if (strlen(argv[i]) < 2)
       return UnknownKey;
@@ -23,7 +23,7 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
                   return KeyNeedValue;
 			  }
 			  char *nextArgument = argv[i+1];
-			  if (opt->needValue == true && isKey(itemList, nextArgument[0], nextArgument[1])) {
+			  if (isKey(itemList, nextArgument[0], nextArgument[1])) {
 				  return ErrorParse;
 			  } else{
                   opt->mask = VAL_IN_CMD;
@@ -101,9 +101,6 @@ void printError(Error errorCode){
           printf("Error: Key need value\n");
           break;
 
-      case NoKey:
-          printf("Error: Please specify key. Use -h for help. \n");
-          break;
 	  case ErrorParse:
 		  printf("Error: Can't parse line. \n");
 		  break;
