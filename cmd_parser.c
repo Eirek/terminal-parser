@@ -11,12 +11,21 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
 		  char sign = argv[i][0];
           for (size_t j = 1; argv[i][j] != '\0'; j++) {
               CmdItem *opt = getKeyPointer(itemList, sign, argv[i][j]);
-              if (opt == NULL)
+			  CmdItem *optNext = getKeyPointer(itemList, sign, argv[i][j+1]);
+              if (opt == NULL) {
                  return UnknownKey;
+			  }
               opt->mask |= KEY_IN_CMD;
-              if (opt->needValue == true && argv[i+1] == NULL)
+			  if (optNext != NULL && optNext->needValue == true) {
+				  return ErrorParse;
+			  }
+              if (opt->needValue == true && argv[i+1] == NULL) {
                   return KeyNeedValue;
-              if (opt->needValue == true) {
+			  }
+			  char *nextArgument = argv[i+1];
+			  if (opt->needValue == true && isKey(itemList, nextArgument[0], nextArgument[1])) {
+				  return ErrorParse;
+			  } else{
                   opt->mask = VAL_IN_CMD;
                   opt->value = argv[i+1];
                   ++i;
@@ -32,7 +41,7 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
 bool isKey(CmdItem* itemList, char sign, char key) {
     int i = 0;
     while (!isEmpty(&itemList[i])) {
-        if((itemList[i].sign == sign) && (itemList[i].key == key) && (itemList[i].mask &= KEY_IN_CMD))
+        if((itemList[i].sign == sign) && (itemList[i].key == key))
             return true;
             i++;
     }
@@ -95,6 +104,9 @@ void printError(Error errorCode){
       case NoKey:
           printf("Error: Please specify key. Use -h for help. \n");
           break;
+	  case ErrorParse:
+		  printf("Error: Can't parse line. \n");
+		  break;
 
       default:
           break;
