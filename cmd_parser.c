@@ -2,46 +2,47 @@
 
 /* Функция парсинга строки, возвращает ошибку из структуры Error */
 Error cmdParse(CmdItem* itemList, int argc, char** argv) {
-    if (argc <= 1) 
-    return NoKey;
+
     for (size_t i = 1; i < argc; i++) {
-      if (strlen(argv[i]) < 2)
-      return UnknownKey;
-      else {
-		  char sign = argv[i][0];
-          for (size_t j = 1; argv[i][j] != '\0'; j++) {
-              CmdItem *opt = getKeyPointer(itemList, sign, argv[i][j]);
-			  CmdItem *optNext = getKeyPointer(itemList, sign, argv[i][j+1]);
-              if (opt == NULL) {
-                 return UnknownKey;
-			  }
-              opt->mask |= KEY_IN_CMD;
-			  if (optNext != NULL && optNext->needValue == true) {
-				  return ErrorParse;
-			  }
-              if (opt->needValue == true && argv[i+1] == NULL) {
-                  return KeyNeedValue;
-			  }
-			  char *nextArgument = argv[i+1];
-			  if (opt->needValue == true && isKey(itemList, nextArgument[0], nextArgument[1])) {
-				  return ErrorParse;
-			  } else{
-                  opt->mask = VAL_IN_CMD;
-                  opt->value = argv[i+1];
-                  ++i;
-                  break;
-              }
-          }  
-      }
-  }
-  return Ok;
+
+        if (strlen(argv[i]) < 2)
+        return UnknownKey;
+     
+            char sign = argv[i][0];
+
+            for (size_t j = 1; argv[i][j] != '\0'; j++) {
+
+                CmdItem* opt = getKeyPointer(itemList, sign, argv[i][j]);
+
+                if(opt == NULL)
+                    return UnknownKey;
+
+                if(opt->needValue == false) {
+                    opt->mask |= KEY_IN_CMD;
+                }
+
+                if (opt != NULL && opt->needValue == true) {
+                    opt->mask |= VAL_IN_CMD;
+                    if (strlen(argv[i]) > 2)
+                        return ErrorParse;
+                    if(argv[i + 1] == NULL)
+                        return KeyNeedValue;
+                 
+                    opt->value = argv[i +1];
+                    ++i;
+                    break;
+                }                
+            }
+    }
+    return Ok;
+
 }
 
 /* Функция проверки наличия ключа */
 bool isKey(CmdItem* itemList, char sign, char key) {
     int i = 0;
     while (!isEmpty(&itemList[i])) {
-        if((itemList[i].sign == sign) && (itemList[i].key == key))
+        if((itemList[i].sign == sign) && (itemList[i].key == key) && (itemList[i].mask &= KEY_IN_CMD))
             return true;
             i++;
     }

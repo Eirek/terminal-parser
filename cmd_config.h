@@ -14,7 +14,7 @@ typedef enum {
     UnknownKey = 200,
     KeyNeedValue = 300,
     NoKey = 400,
-	ErrorParse = 500
+	ErrorParse = 500,
 } Error;
 
 /* Структура для хранения ключа */
