@@ -13,10 +13,10 @@ int main(int argc, char** argv)
             '-', 'a', 0x00000000, NULL, "Print greetings to (value)", true
         },
         {
-            '-', 'o', 0x00000000, NULL, "Open file (value)", true
+            '+', 'o', 0x00000000, NULL, "Open file (value)", true
         },
         {
-            '+', 'p', 0x00000000, NULL, "Print key-massive after parsing", false
+            '-', 'p', 0x00000000, NULL, "Print key-massive after parsing", false
         },
         {
             0, 0, 0, NULL, NULL, false
@@ -36,12 +36,12 @@ int main(int argc, char** argv)
         printHelp(itemList,argv[0]);
     }
 
-    if(isKey(itemList, '+','p')) {
+    if(isKey(itemList, '-','p')) {
         cmdUsage(itemList, "Key-massive after parsing:\n");
     }
 
-    if(isValue(itemList, '-','o')) {
-        printf("Opening file: %s\n", getKeyValue(itemList, '-','o'));
+    if(isValue(itemList, '+','o')) {
+        printf("Opening file: %s\n", getKeyValue(itemList, '+','o'));
     }
 
 

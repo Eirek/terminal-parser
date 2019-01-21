@@ -138,4 +138,3 @@ bool isEmpty(CmdItem* itemList) {
     }
     return false;
 }
-
