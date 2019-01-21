@@ -2,6 +2,7 @@
 
 /* Функция парсинга строки, возвращает ошибку из структуры Error */
 Error cmdParse(CmdItem* itemList, int argc, char** argv) {
+<<<<<<< HEAD
 
     for (size_t i = 1; i < argc; i++) {
 
@@ -36,6 +37,41 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
     }
     return Ok;
 
+=======
+    if (argc <= 1) 
+    return 0;
+    for (size_t i = 1; i < argc; i++) {
+      if (strlen(argv[i]) < 2)
+      return UnknownKey;
+      else {
+		  char sign = argv[i][0];
+          for (size_t j = 1; argv[i][j] != '\0'; j++) {
+              CmdItem *opt = getKeyPointer(itemList, sign, argv[i][j]);
+			  CmdItem *optNext = getKeyPointer(itemList, sign, argv[i][j+1]);
+              if (opt == NULL) {
+                 return UnknownKey;
+			  }
+              opt->mask |= KEY_IN_CMD;
+			  if (optNext != NULL && optNext->needValue == true) {
+				  return ErrorParse;
+			  }
+              if (opt->needValue == true && argv[i+1] == NULL) {
+                  return KeyNeedValue;
+			  }
+			  char *nextArgument = argv[i+1];
+			  if (isKey(itemList, nextArgument[0], nextArgument[1])) {
+				  return ErrorParse;
+			  } else{
+                  opt->mask = VAL_IN_CMD;
+                  opt->value = argv[i+1];
+                  ++i;
+                  break;
+              }
+          }  
+      }
+  }
+  return Ok;
+>>>>>>> c45d912debf78a87460b1d021c67a442dd3a7722
 }
 
 /* Функция проверки наличия ключа */
@@ -102,9 +138,6 @@ void printError(Error errorCode){
           printf("Error: Key need value\n");
           break;
 
-      case NoKey:
-          printf("Error: Please specify key. Use -h for help. \n");
-          break;
 	  case ErrorParse:
 		  printf("Error: Can't parse line. \n");
 		  break;
