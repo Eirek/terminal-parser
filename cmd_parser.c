@@ -42,23 +42,13 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv) {
 bool isKey(CmdItem* itemList, char sign, char key) {
     int i = 0;
     while (!isEmpty(&itemList[i])) {
-        if((itemList[i].sign == sign) && (itemList[i].key == key) && (itemList[i].mask &= KEY_IN_CMD))
+        if((itemList[i].sign == sign) && (itemList[i].key == key) && (itemList[i].mask != 0))
             return true;
             i++;
     }
     return false;
 }
 
-/* Функция проверки наличия значения */
-bool isValue(CmdItem* itemList, char sign, char key){
-    int i = 0;
-    while (!isEmpty(&itemList[i])) {
-      if((itemList[i].sign == sign) && (itemList[i].key == key) && (itemList[i].mask &= VAL_IN_CMD))
-          return true;
-          i++;
-  }
-  return false;
-}
 
 /* Получение указателя на объект, описывающий ключ  (NULL если ключа нет в массиве)*/
 CmdItem* getKeyPointer(CmdItem* itemList, char sign, char key){
