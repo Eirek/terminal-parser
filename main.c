@@ -40,12 +40,12 @@ int main(int argc, char** argv)
         cmdUsage(itemList, "Key-massive after parsing:\n");
     }
 
-    if(isValue(itemList, '+','o')) {
+    if(isKey(itemList, '+','o')) {
         printf("Opening file: %s\n", getKeyValue(itemList, '+','o'));
     }
 
 
-    if(isValue(itemList, '-','a')) {
+    if(isKey(itemList, '-','a')) {
         printf("Hello, %s!\n", getKeyValue(itemList, '-','a'));
     }
 
