@@ -49,6 +49,17 @@ bool isKey(CmdItem* itemList, char sign, char key) {
     return false;
 }
 
+/* Функция проверки наличия значения */
+bool isValue(CmdItem* itemList, char sign, char key){
+    int i = 0;
+    while (!isEmpty(&itemList[i])) {
+      if((itemList[i].sign == sign) && (itemList[i].key == key) && (itemList[i].needValue == true))
+          return true;
+          i++;
+  }
+  return false;
+}
+
 /* Получение указателя на объект, описывающий ключ  (NULL если ключа нет в массиве)*/
 CmdItem* getKeyPointer(CmdItem* itemList, char sign, char key){
   for(size_t i = 0; isEmpty(&itemList[i]) != true; i++) {

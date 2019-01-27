@@ -16,6 +16,8 @@ Error cmdParse(CmdItem* itemList, int argc, char** argv);
 /* Функция проверки наличия ключа */
 bool isKey(CmdItem* itemList, char sign,char key);
 
+/* Функция проверки наличия значения */
+bool isValue(CmdItem* itemList, char sign,char key);
 
 /* Получение указателя на объект, описывающий ключ  (NULL если ключа нет в массиве)*/
 CmdItem* getKeyPointer(CmdItem* itemList, char sign, char key);
